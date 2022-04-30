@@ -3,6 +3,7 @@ import xmlrpc.client
 ip_server = 'http://localhost:8000'
 
 master = xmlrpc.client.ServerProxy(ip_server)
+server = xmlrpc.client.ServerProxy('http://localhost:8001')
 
 def menu():
     print("Chose an option: ")
@@ -19,6 +20,7 @@ def menu():
 
 if __name__ == '__main__':
     print("Hi, welcome!")
+
     print(master.getParties())
 
 
@@ -28,19 +30,29 @@ if __name__ == '__main__':
     if menuOption == 0:
         print("Bye bye :(")
         exit()
+
+
+
     elif menuOption == 1:
-        test = master.createParty()
-        print(test)
-        server = xmlrpc.client.ServerProxy(test)
-        print(xmlrpc.client.ServerProxy(test).getGameStarted())
+        print(master.system.listMethods())
+
+        print(master.createParty())
+        print(master.getParties())
+        print(server.system.listMethods())
+        print(server.createParty())
+
+        print(server.getParties())
+        print(master.getParties())
 
 
 
     elif menuOption == 2:
         i = 0
+        print(server.getParties())
         print(master.getParties())
 
-
+"""
         while i != len(master.getParties()):
             print("Room number " + i)
             i += 1
+"""
