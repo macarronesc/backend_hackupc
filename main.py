@@ -1,58 +1,34 @@
-import xmlrpc.client
+from xmlrpc.client import Server, ServerProxy, Error
+import logging
 
-ip_server = 'http://localhost:8000'
-
-master = xmlrpc.client.ServerProxy(ip_server)
-server = xmlrpc.client.ServerProxy('http://localhost:8001')
-
-def menu():
-    print("Chose an option: ")
-    print("1. Create a new room")
-    print("2. See the existing room")
-    print("0. Close")
-
-    menuOption = int(input())
-    while menuOption != 1 and menuOption != 2 and menuOption != 0:
-        menu()
-        menuOption = int(input())
-
-    return menuOption
-
-if __name__ == '__main__':
-    print("Hi, welcome!")
-
-    print(master.getParties())
+# variables
+SERVER_PORT = 8000
+SERVER_IP = 'localhost'
+master = ServerProxy(f'http://{SERVER_IP}:{SERVER_PORT}')
+worker = None
 
 
-
-    menuOption = menu()
-
-    if menuOption == 0:
-        print("Bye bye :(")
-        exit()
+def ping(msg):
+    result = f"{master.pingMe(msg)}\n"
+    return result
 
 
+# turn on the server forever until interrupt
+def main():
+    try:
+        print("Hi")
+        w = master.createParty()
 
-    elif menuOption == 1:
         print(master.system.listMethods())
 
-        print(master.createParty())
-        print(master.getParties())
-        print(server.system.listMethods())
-        print(server.createParty())
+        worker = ServerProxy(w)
 
-        print(server.getParties())
-        print(master.getParties())
+        print(worker.system.listMethods())
 
 
+    except:
+        print("Goodbye")
 
-    elif menuOption == 2:
-        i = 0
-        print(server.getParties())
-        print(master.getParties())
 
-"""
-        while i != len(master.getParties()):
-            print("Room number " + i)
-            i += 1
-"""
+if __name__ == '__main__':
+    main()

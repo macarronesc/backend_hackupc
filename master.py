@@ -22,7 +22,7 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
         urlWorker = 'http://localhost:' + str(numWorkers)
 
         listWorkers.append(urlWorker)
-        listWorkers[len(listWorkers) - 1] = subprocess.Popen('python worker.py ' + str(numWorkers), shell=True)
+        subprocess.Popen('python worker.py ' + str(numWorkers), shell=True)
 
         print("Creating Party: " + urlWorker)
         print(listWorkers)
