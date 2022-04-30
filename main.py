@@ -1,60 +1,46 @@
-# This is a sample Python script.
+import xmlrpc.client
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-import os
-import subprocess
-from asyncore import poll
-import random
+ip_server = 'http://localhost:8000'
 
+master = xmlrpc.client.ServerProxy(ip_server)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def menu():
+    print("Chose an option: ")
+    print("1. Create a new room")
+    print("2. See the existing room")
+    print("0. Close")
 
+    menuOption = int(input())
+    while menuOption != 1 and menuOption != 2 and menuOption != 0:
+        menu()
+        menuOption = int(input())
 
-# Press the green button in the gutter to run the script.
+    return menuOption
+
 if __name__ == '__main__':
-    listWorkers = []
-
-    numWorkers = 8005 + len(listWorkers)
-    print(len(listWorkers))
-
-    print("Creating Party: ")
-    print("Party: http://localhost:" + str(numWorkers))
-
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
-
-def existentWordInDictionary(word):
-    exist = False
-    file = open("0_palabras_todas.txt")
-    for line in file.readlines():
-
-        if (line.lower() == word.lower()):
-            exist = True
-    file.close()
-    return exist
+    print("Hi, welcome!")
+    print(master.getParties())
 
 
 
-def getPosition(lenght):
-    possi = lenght / 2
-    rand = random.randint(0, possi)
-    return rand
+    menuOption = menu()
 
-oldWord = "pato"
+    if menuOption == 0:
+        print("Bye bye :(")
+        exit()
+    elif menuOption == 1:
+        test = master.createParty()
+        print(test)
+        server = xmlrpc.client.ServerProxy(test)
+        print(xmlrpc.client.ServerProxy(test).getGameStarted())
 
 
-def correctWord(word):
-    correct = False
-    part = getPosition(len(word))
-    print(existentWordInDictionary(word))
-    if existentWordInDictionary(word) and oldWord[part:part + 2].lower() == word[0:2].lower():
-        correct = True
-        return correct
 
-    return correct
+    elif menuOption == 2:
+        i = 0
+        print(master.getParties())
 
-print(correctWord("todo"))
+
+        while i != len(master.getParties()):
+            print("Room number " + i)
+            i += 1

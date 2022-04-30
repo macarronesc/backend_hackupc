@@ -1,6 +1,7 @@
 import subprocess
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
+import xmlrpc.client
 
 
 # Restrict to a particular path.
@@ -17,17 +18,20 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
 
     def createParty():
-        numWorkers = 8005 + len(listWorkers)
+        numWorkers = 8001 + len(listWorkers)
+        urlWorker = 'http://localhost:' + str(numWorkers)
 
-        listWorkers.append('http://localhost:' + str(numWorkers))
+        listWorkers.append(urlWorker)
         listWorkers[len(listWorkers) - 1] = subprocess.Popen('python worker.py ' + str(numWorkers), shell=True)
 
-        print("Creating Party: ")
-        print("Party: http://localhost:" + str(numWorkers))
+        print("Creating Party: " + urlWorker)
+        print(listWorkers)
+        return urlWorker
 
 
     def getParties():
         print("Get Parties")
+        print(listWorkers)
         return listWorkers
 
 
