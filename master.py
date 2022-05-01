@@ -1,7 +1,6 @@
 import subprocess
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
-import xmlrpc.client
 
 
 # Restrict to a particular path.

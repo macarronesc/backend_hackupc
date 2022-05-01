@@ -1,5 +1,4 @@
 from xmlrpc.client import Server, ServerProxy, Error
-import logging
 
 # variables
 SERVER_PORT = 8000

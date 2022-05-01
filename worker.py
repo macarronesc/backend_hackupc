@@ -1,9 +1,7 @@
-import subprocess
 import sys
 from random import random
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
-import xmlrpc.client
 
 
 # Restrict to a particular path.
@@ -34,15 +32,14 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
     # Turn
     turnClient = 0
 
-
     # Know if the game started
-    # Return: value of gameStarted
+    # @return value of gameStarted
     def getGameStarted():
         return gameStarted
 
 
     # Start the game
-    # Return: True 4 the client know that all is done
+    # @return True 4 the client know that all is done
     def startGame():
         global gameStarted
         gameStarted = True
@@ -50,13 +47,14 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
 
     # Know if must wait an another client
-    # Return: value of waitingClient
+    # @return value of waitingClient
     def getWaitingClient():
         return waitingClient
 
 
     # Method to recibe (server) the word from the client
-    # Return: if the word is correctly or not
+    # param wordSended is String with the word to send to the server from the client
+    # @return if the word is correctly or not
     def sendWord(wordSended):
         global word, oldWord, waitingClient
         oldWord = word
@@ -69,26 +67,25 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
 
     # Send to client the last word
-    # Return: value of word
+    # @return value of word
     def getRecibeWord():
         return word
 
 
     # Send the number of client that who has the next round
-    # Return: value of turnClient
+    # @return value of turnClient
     def getWhoNextRound():
         return turnClient
 
 
     # Method local to pick the next client that who has the next round
-    # Return: nothing
     def pickTurn():
         global numClients, turnClient
         turnClient = random.randint(1, numClients)
 
 
     # Add a new client to the party
-    # Return: the number that correspond to the new client in the party
+    # @return the number that correspond to the new client in the party
     def addClient():
         global numClients
         numClients += 1
@@ -96,16 +93,17 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
 
     # Get the number of clients in the party
-    # Return: value of numClients
+    # @return value of numClients
     def getNumClients():
         return numClients
 
 
     # Know if a word exist in Diccionary
-    # Return: True if exist // False if not
+    # @param word string with the word to check in the Diccionary
+    # @return True if exist or False if not
     def existentWordInDictionary(word):
         exist = False
-        file = open("0_palabras_todas.txt")
+        file = open("diccionary.txt")
         for line in file.readlines():
             line = line.replace("\n", "")
             if line == word:
@@ -115,13 +113,16 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
 
     # Method local to get the next random position to make the telephone
-    # Return: random value of the position
+    # @param integer with th lenght of the word
+    # @return random value of the position
     def getPosition(lenght):
         possi = lenght / 2
         return random.randint(0, possi)
 
 
     # Know if the Word recibed there is in the correct position
+    # @param string with the word to check
+    # @return True if the word is correct or False if not
     def correctWord(word):
         correct = False
         part = getPosition(len(word))
@@ -132,12 +133,13 @@ with SimpleXMLRPCServer(ip, requestHandler=RequestHandler) as server:
 
         return correct
 
-
+    # Chose a random word for the first word to play
+    # @return the word
     def randomWord():
         print("Making a random word")
         pickTurn()
 
-        file = open("0_palabras_todas.txt")
+        file = open("diccionary.txt")
         num_lines = random.randint(0, sum(1 for line in file))
 
         randomWordString = [line for line in [file.readline() for _ in range(num_lines)] if len(line)]
